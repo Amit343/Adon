@@ -34,3 +34,31 @@ class yahoo_live_Api(APIView):
 
         
 
+def live_price_of_stock(request):
+    dow_list = si.tickers_dow()
+    value=dow_list[0:8]
+    list_of_live_price=[]
+    value_of_live_price={}
+    for i in value:
+        data=si.get_live_price(i)
+        print(data,i)
+        value_of_live_price[i]=data
+    list_of_live_price.append(value_of_live_price)
+    return HttpResponse("<html><body><h3>This is info of the live prices</h3<br> <p>%s</p>.</body></html>" % list_of_live_price)
+
+
+
+#this is data of indian stock parket
+from nsepython import *
+def indian_stock(symbol,attribute="lastPrice"):
+    positions = nsefetch('https://www.nseindia.com/api/equity-stockIndices?index=SECURITIES%20IN%20F%26O')
+    indian_stocks=[]
+    for x in range(0, 10):
+        indian_stocks.append(positions['data'][x])
+    return HttpResponse("<html><body><h3>This is data of indian stock market</h3><br> <p>%s</p>.</body></html>" % indian_stocks)
+
+
+def info(request):
+    data = yf.download("SPY", start="2022-07-24", end="2022-07-26", interval = "1m")
+    return HttpResponse("<html><body><h3>This is data of  stock market</h3><br> <p>%s</p>.</body></html>" % data)
+    
